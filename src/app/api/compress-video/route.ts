@@ -1,14 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
 import ffmpeg from 'fluent-ffmpeg';
 import ffmpegStatic from 'ffmpeg-static';
-import { mkdirSync, writeFileSync, createReadStream, statSync, unlinkSync, existsSync } from 'fs';
+import ffprobeStatic from 'ffprobe-static';
+import { mkdirSync, writeFileSync, readFileSync, statSync, unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
 import { Readable } from 'stream';
 
 export const runtime = 'nodejs';
 
-ffmpeg.setFfmpegPath(ffmpegStatic as unknown as string);
+// Resolve ffmpeg/ffprobe paths robustly to avoid ENOENT in dev/runtime
+const ffmpegCandidates = [
+  process.env.FFMPEG_PATH,
+  (ffmpegStatic as unknown as string),
+  '/opt/homebrew/bin/ffmpeg', // macOS (arm64)
+  '/usr/local/bin/ffmpeg',
+  '/usr/bin/ffmpeg',
+].filter(Boolean) as string[];
+
+for (const candidate of ffmpegCandidates) {
+  try {
+    if (existsSync(candidate)) {
+      ffmpeg.setFfmpegPath(candidate);
+      break;
+    }
+  } catch {}
+}
+
+const ffprobeCandidates = [
+  process.env.FFPROBE_PATH,
+  (ffprobeStatic as unknown as { path?: string })?.path,
+  '/opt/homebrew/bin/ffprobe',
+  '/usr/local/bin/ffprobe',
+  '/usr/bin/ffprobe',
+].filter(Boolean) as string[];
+
+for (const candidate of ffprobeCandidates) {
+  try {
+    if (existsSync(candidate)) {
+      ffmpeg.setFfprobePath(candidate);
+      break;
+    }
+  } catch {}
+}
 
 const TEMP_DIR = join(process.cwd(), 'temp');
 
@@ -36,14 +70,15 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes);
     writeFileSync(inputPath, buffer);
 
+    let lastStderr = '';
+    const isDarwin = process.platform === 'darwin';
     await new Promise<void>((resolve, reject) => {
       let command = ffmpeg(inputPath)
-        .videoCodec('libx264')
-        .audioCodec('aac')
+        .videoCodec(isDarwin ? 'h264_videotoolbox' : 'libx264')
         .videoBitrate(targetBitrate)
-        .audioBitrate(targetAudioBitrate)
         .format('mp4')
-        .outputOptions('-movflags', 'faststart');
+        .outputOptions('-movflags', 'faststart')
+        .outputOptions('-pix_fmt', 'yuv420p');
 
       if (Number.isFinite(targetWidth) || Number.isFinite(targetHeight)) {
         const size = `${Number.isFinite(targetWidth) ? targetWidth : '?'}x${Number.isFinite(targetHeight) ? targetHeight : '?'}`;
@@ -51,16 +86,15 @@ export async function POST(request: NextRequest) {
       }
 
       command
+        .on('stderr', (line: string) => { lastStderr = line; })
         .on('end', () => resolve())
-        .on('error', (err: unknown) => reject(err))
+        .on('error', (err: unknown) => reject(err instanceof Error ? new Error(`${err.message}${lastStderr ? `\n${lastStderr}` : ''}`) : err))
         .save(outputPath);
     });
 
-    const nodeStream = createReadStream(outputPath);
-    const stream = Readable.toWeb(nodeStream) as unknown as ReadableStream;
+    const buf = readFileSync(outputPath);
     const stats = statSync(outputPath);
-
-    return new NextResponse(stream as unknown as ReadableStream, {
+    return new NextResponse(buf, {
       headers: {
         'Content-Type': 'video/mp4',
         'Content-Disposition': `attachment; filename="compressed-${file.name.replace(/\.[^.]+$/, '')}.mp4"`,
@@ -68,7 +102,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    return NextResponse.json({ error: 'Video compression failed' }, { status: 500 });
+    const message = (error instanceof Error && error.message) ? error.message : 'Video compression failed';
+    return NextResponse.json({ error: message }, { status: 500 });
   } finally {
     try { unlinkSync(inputPath); } catch {}
     try { unlinkSync(outputPath); } catch {}

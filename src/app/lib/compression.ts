@@ -15,7 +15,14 @@ export async function requestImageCompression(payload: CompressImageForm): Promi
   if (payload.maxHeight != null) form.append('maxHeight', String(payload.maxHeight));
 
   const res = await fetch('/api/compress-image', { method: 'POST', body: form });
-  if (!res.ok) throw new Error('Image compression failed');
+  if (!res.ok) {
+    try {
+      const data = await res.json();
+      throw new Error(data?.error || 'Image compression failed');
+    } catch {
+      throw new Error('Image compression failed');
+    }
+  }
   return await res.blob();
 }
 
@@ -36,7 +43,14 @@ export async function requestVideoCompression(payload: CompressVideoForm): Promi
   if (payload.maxHeight != null) form.append('maxHeight', String(payload.maxHeight));
 
   const res = await fetch('/api/compress-video', { method: 'POST', body: form });
-  if (!res.ok) throw new Error('Video compression failed');
+  if (!res.ok) {
+    try {
+      const data = await res.json();
+      throw new Error(data?.error || 'Video compression failed');
+    } catch {
+      throw new Error('Video compression failed');
+    }
+  }
   return res;
 }
 

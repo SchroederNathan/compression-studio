@@ -79,7 +79,8 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    return NextResponse.json({ error: 'Compression failed' }, { status: 500 });
+    const message = (error instanceof Error && error.message) ? error.message : 'Compression failed';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
