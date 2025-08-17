@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import FileUploader from "./components/FileUploader";
+import FileTypeTabs from "./components/file-type-tabs";
 import CompressionSettings, {
   ImageCompressionSettings,
   VideoCompressionSettings,
@@ -157,26 +158,7 @@ export default function Home() {
       <h1 className="text-3xl font-semibold text-[var(--color-foreground)]">
         Compression Studio
       </h1>
-      <div className="flex items-center gap-3">
-        <label className="text-sm text-[var(--color-foreground)] gap-2">
-          <input
-            type="radio"
-            name="mode"
-            checked={mode === "image"}
-            onChange={() => setMode("image")}
-          />{" "}
-          Image
-        </label>
-        <label className="text-sm text-[var(--color-foreground)] gap-2">
-          <input
-            type="radio"
-            name="mode"
-            checked={mode === "video"}
-            onChange={() => setMode("video")}
-          />{" "}
-          Video
-        </label>
-      </div>
+      <FileTypeTabs mode={mode} onChange={setMode} />
       <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] p-4 flex flex-col gap-3">
         <FileUploader onFileSelected={onFileSelected} mode={mode} />
         {fileInfo && (
