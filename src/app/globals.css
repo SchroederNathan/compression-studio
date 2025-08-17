@@ -11,7 +11,7 @@
   --font-family-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-family-mono: var(--font-geist-mono), ui-monospace, monospace;
   /* App palette */
-  --color-primary: #2563eb;
+  --color-primary: #1d4ed8;
   --color-primary-foreground: #ffffff;
   --color-secondary: #6b7280;
   --color-secondary-foreground: #ffffff;
@@ -36,8 +36,8 @@
   :root {
     --background: #0c0d10;
     --foreground: #ededed;
-    --color-primary: #60a5fa;
-    --color-primary-foreground: #081225;
+    --color-primary: #3b82f6;
+    --color-primary-foreground: #e3e8ef;
     --color-secondary: #9ca3af;
     --color-secondary-foreground: #0b0c0e;
     --color-accent: #34d399;

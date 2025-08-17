@@ -9,6 +9,7 @@ import FileUploader from "./components/FileUploader";
 import ProgressBar from "./components/ProgressBar";
 import QualitySlider from "./components/QualitySlider";
 import { Compare } from "./components/ui/compare";
+import { Button } from "./components/ui/button";
 import {
   requestImageCompression,
   requestVideoCompression,
@@ -330,71 +331,8 @@ export default function Home() {
               )}
             </div>
 
-            {originalUrl && compressedUrl ? (
-              // Show comparison when both files are ready
-              <div className="flex flex-col gap-4">
-                <div className="w-full">
-                  <div className="w-full max-w-none">
-                    {mode === "image" ? (
-                      <Compare
-                        firstImage={originalUrl}
-                        secondImage={compressedUrl}
-                        firstImageClassName="object-cover object-center w-full h-full"
-                        secondImageClassname="object-cover object-center w-full h-full"
-                        className="w-full rounded-lg"
-                        slideMode="drag"
-                        autoplay={false}
-                      />
-                    ) : (
-                      <Compare
-                        firstNode={
-                          <video
-                            src={originalUrl}
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                            className="w-full h-full object-cover"
-                          />
-                        }
-                        secondNode={
-                          <video
-                            src={compressedUrl}
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                            className="w-full h-full object-cover"
-                          />
-                        }
-                        firstImageClassName="object-cover object-center w-full h-full"
-                        secondImageClassname="object-cover object-center w-full h-full"
-                        className="w-full rounded-lg"
-                        slideMode="drag"
-                        autoplay={false}
-                      />
-                    )}
-                  </div>
-                </div>
-
-                {compressedBlob && (
-                  <div className="text-center text-sm text-[var(--color-muted-foreground)]">
-                    Compressed size:{" "}
-                    {fileSizeToHumanReadable(compressedBlob.size)}
-                    {selectedFile && (
-                      <span className="ml-2 text-green-500">
-                        (
-                        {Math.round(
-                          (1 - compressedBlob.size / selectedFile.size) * 100
-                        )}
-                        % reduction)
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            ) : (
-              // Show settings when file is selected but not compressed yet
+            {
+              /* Always show compression settings */
               <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] p-6">
                 <h3 className="text-lg font-medium mb-4 text-[var(--color-foreground)]">
                   Compression Settings
@@ -594,39 +532,102 @@ export default function Home() {
                     )}
                   </div>
                 </div>
+
+                {/* Action buttons */}
+                <div className="flex items-center gap-3 pt-6 mt-6 border-t border-[var(--color-border)] ">
+                  <Button
+                    onClick={onPreview}
+                    disabled={!selectedFile || downloading}
+                    variant="secondary"
+                    size="lg"
+                  >
+                    {downloading ? "Processing…" : "Compress"}
+                  </Button>
+
+                  {compressedBlob && (
+                    <Button
+                      onClick={onDownload}
+                      disabled={downloading}
+                      variant="primary"
+                      size="lg"
+                    >
+                      Download
+                    </Button>
+                  )}
+
+                  {downloading && (
+                    <div className="flex-1">
+                      <ProgressBar value={progress} />
+                    </div>
+                  )}
+                </div>
+              </div>
+            }
+
+            {originalUrl && compressedUrl && (
+              // Show comparison when both files are ready
+              <div className="flex flex-col gap-4 mb-6">
+                <div className="w-full">
+                  <div className="w-full max-w-none">
+                    {mode === "image" ? (
+                      <Compare
+                        firstImage={originalUrl}
+                        secondImage={compressedUrl}
+                        firstImageClassName="object-cover object-center w-full h-full"
+                        secondImageClassname="object-cover object-center w-full h-full"
+                        className="w-full rounded-lg"
+                        slideMode="drag"
+                        autoplay={false}
+                      />
+                    ) : (
+                      <Compare
+                        firstNode={
+                          <video
+                            src={originalUrl}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            className="w-full h-full object-cover"
+                          />
+                        }
+                        secondNode={
+                          <video
+                            src={compressedUrl}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            className="w-full h-full object-cover"
+                          />
+                        }
+                        firstImageClassName="object-cover object-center w-full h-full"
+                        secondImageClassname="object-cover object-center w-full h-full"
+                        className="w-full rounded-lg"
+                        slideMode="drag"
+                        autoplay={false}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {compressedBlob && (
+                  <div className="text-center text-sm text-[var(--color-muted-foreground)]">
+                    Compressed size:{" "}
+                    {fileSizeToHumanReadable(compressedBlob.size)}
+                    {selectedFile && (
+                      <span className="ml-2 text-green-500">
+                        (
+                        {Math.round(
+                          (1 - compressedBlob.size / selectedFile.size) * 100
+                        )}
+                        % reduction)
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             )}
-
-            {/* Action buttons */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={onPreview}
-                disabled={!selectedFile || downloading}
-                className="px-6 py-3 rounded-md bg-[var(--color-primary)] text-[var(--color-primary-foreground)] font-medium disabled:opacity-60 hover:bg-[var(--color-primary)]/90 transition-colors duration-200"
-              >
-                {downloading
-                  ? "Processing…"
-                  : originalUrl && compressedUrl
-                  ? "Recompress"
-                  : "Compress"}
-              </button>
-
-              {compressedBlob && (
-                <button
-                  onClick={onDownload}
-                  disabled={downloading}
-                  className="px-6 py-3 rounded-md bg-[var(--color-success)] text-[var(--color-success-foreground)] font-medium disabled:opacity-60 hover:bg-[var(--color-success)]/90 transition-colors duration-200"
-                >
-                  Download
-                </button>
-              )}
-
-              {downloading && (
-                <div className="flex-1">
-                  <ProgressBar value={progress} />
-                </div>
-              )}
-            </div>
           </div>
         )}
       </main>
