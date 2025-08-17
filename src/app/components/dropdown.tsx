@@ -55,7 +55,7 @@ export default function Dropdown({
   );
 
   return (
-    <Menu as="div" className="relative inline-block">
+    <Menu as="div" className={`relative inline-block ms-4 ${menuClassName}`}>
       <MenuButton className={defaultButtonClassName}>
         {buttonText}
         <ChevronDownIcon

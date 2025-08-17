@@ -59,7 +59,6 @@ export default function FileUploader({ onFileSelected, mode = 'image' }: Props) 
           `${dragActive ? 'border-[var(--color-primary)]' : 'border-[var(--color-border)]'} ` +
           `bg-[var(--color-card)] hover:border-[var(--color-foreground)]/40 focus:outline-[var(--color-primary)]`
         }
-        onClick={() => inputRef.current?.click()}
       >
         <div className="relative mx-auto h-16 w-16">
           {/* side accent squares */}
