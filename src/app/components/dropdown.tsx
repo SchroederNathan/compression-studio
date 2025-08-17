@@ -39,14 +39,14 @@ export default function Dropdown({
         <button
           onClick={item.onClick}
           disabled={item.disabled}
-          className={`block w-full px-4 py-2 text-left text-sm ${item.disabled ? 'opacity-50 cursor-not-allowed' : 'text-[var(--color-foreground)] hover:bg-[var(--color-muted)] transition-colors duration-150'}`}
+          className={`block w-full px-4 py-2 text-left text-sm hover:cursor-pointer ${item.disabled ? 'opacity-50 cursor-not-allowed' : 'text-[var(--color-foreground)] hover:bg-[var(--color-muted)] transition-colors duration-150'}`}
         >
           {item.label}
         </button>
       ) : (
         <a
           href={item.href || "#"}
-          className={`block px-4 py-2 text-sm ${item.disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'text-[var(--color-foreground)] hover:bg-[var(--color-muted)] transition-colors duration-150'}`}
+          className={`block px-4 py-2 text-sm hover:cursor-pointer ${item.disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'text-[var(--color-foreground)] hover:bg-[var(--color-muted)] transition-colors duration-150'}`}
         >
           {item.label}
         </a>

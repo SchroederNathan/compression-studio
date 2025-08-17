@@ -218,7 +218,7 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <button
                 onClick={resetToNewFile}
-                className="p-2 rounded-md hover:bg-[var(--color-muted)] transition-colors duration-200"
+                className="p-2 rounded-md hover:bg-[var(--color-muted)] transition-colors duration-200 hover:cursor-pointer"
                 title="Try another file"
               >
                 <ArrowLeftIcon className="w-5 h-5 text-[var(--color-muted-foreground)]" />
@@ -291,7 +291,7 @@ export default function Home() {
                 <div className="text-center text-sm text-[var(--color-muted-foreground)]">
                   Compressed size: {fileSizeToHumanReadable(compressedBlob.size)} 
                   {selectedFile && (
-                    <span className="ml-2">
+                    <span className="ml-2 text-green-500">
                       ({Math.round((1 - compressedBlob.size / selectedFile.size) * 100)}% reduction)
                     </span>
                   )}
