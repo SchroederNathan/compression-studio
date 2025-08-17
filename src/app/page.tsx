@@ -13,6 +13,7 @@ import {
 } from "./lib/compression";
 import { Compare } from "./components/ui/compare";
 import { ArrowLeftIcon } from "lucide-react";
+import Image from "next/image";
 
 export type ImageCompressionSettings = {
   format: 'jpeg' | 'png' | 'webp' | 'avif';
@@ -196,12 +197,74 @@ export default function Home() {
     URL.revokeObjectURL(url);
   }, [compressedBlob, selectedFile, mode, imageSettings]);
 
+  // Dynamic structured data based on current mode
+  const dynamicStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": mode === "image" ? "Image Compression Tool - Compression Studio" : "Video Compression Tool - Compression Studio",
+    "description": mode === "image" 
+      ? "Free online image compression tool. Compress JPEG, PNG, WebP, AVIF images while maintaining quality. Reduce file sizes instantly."
+      : "Free online video compression tool. Compress MP4 videos with adjustable quality and bitrate settings. Reduce video file sizes efficiently.",
+    "url": `https://compression-studio.com${mode === "image" ? "/image-compression" : "/video-compression"}`,
+    "mainEntity": {
+      "@type": "SoftwareApplication",
+      "name": `${mode === "image" ? "Image" : "Video"} Compression Tool`,
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "description": mode === "image" 
+        ? "Professional image compression with support for JPEG, PNG, WebP, and AVIF formats"
+        : "Professional video compression with quality control and bitrate optimization",
+      "featureList": mode === "image" 
+        ? ["JPEG compression", "PNG compression", "WebP compression", "AVIF compression", "Quality control", "Size optimization"]
+        : ["MP4 compression", "Video bitrate control", "Audio bitrate control", "Resolution adjustment", "Quality optimization"],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://compression-studio.com"
+        },
+        {
+          "@type": "ListItem", 
+          "position": 2,
+          "name": `${mode === "image" ? "Image" : "Video"} Compression`,
+          "item": `https://compression-studio.com${mode === "image" ? "/image-compression" : "/video-compression"}`
+        }
+      ]
+    }
+  };
+
   return (
     <main className="flex flex-col gap-6 container my-10 mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold text-[var(--color-foreground)]">
-          Compression Studio
-        </h1>
+        <div className="relative h-12">
+          {/* Logo for light mode (show logo-dark.svg) */}
+          <Image
+            src="/logos/logo-dark.svg"
+            alt="Compression Studio"
+            width={200}
+            height={48}
+            className="h-12 w-auto logo-light-mode"
+            priority
+          />
+          {/* Logo for dark mode (show logo-light.svg) */}
+          <Image
+            src="/logos/logo-light.svg"
+            alt="Compression Studio"
+            width={200}
+            height={48}
+            className="h-12 w-auto logo-dark-mode"
+            priority
+          />
+        </div>
         <FileTypeTabs mode={mode} onChange={handleModeChange} />
       </div>
 
@@ -447,6 +510,7 @@ export default function Home() {
           </div>
         </div>
       )}
-    </main>
+      </main>
+    </>
   );
 }

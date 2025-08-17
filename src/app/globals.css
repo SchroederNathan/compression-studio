@@ -63,3 +63,22 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
+
+/* Logo theme switching */
+.logo-light-mode {
+  display: block;
+}
+
+.logo-dark-mode {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .logo-light-mode {
+    display: none;
+  }
+  
+  .logo-dark-mode {
+    display: block;
+  }
+}
