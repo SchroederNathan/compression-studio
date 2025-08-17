@@ -336,15 +336,16 @@ export default function Home() {
                           { label: 'AVIF', onClick: () => setImageSettings(prev => ({ ...prev, format: 'avif' })), type: 'button' }
                         ]}
                         position="left"
+                        menuClassName="ms-4"
                       />
                     </div>
                   )}
                 </div>
                 
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-[var(--color-foreground)]">
+                  <div className="grid grid-cols-2 gap-4 ">
+                    <div className="space-y-4">
+                      <label className="text-sm font-medium text-[var(--color-foreground)] mb-1.5 block">
                         Max Width
                       </label>
                       <input
@@ -364,7 +365,7 @@ export default function Home() {
                     </div>
                     
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-[var(--color-foreground)]">
+                      <label className="text-sm font-medium text-[var(--color-foreground)] mb-1.5 block">
                         Max Height
                       </label>
                       <input

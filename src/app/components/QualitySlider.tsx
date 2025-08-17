@@ -40,7 +40,7 @@ export default function QualitySlider({
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium text-[var(--color-foreground)]">
           {label}
@@ -50,7 +50,7 @@ export default function QualitySlider({
             <span className="text-xs text-[var(--color-muted-foreground)]">
               {getQualityLabel(localValue)}
             </span>
-            <span className="text-sm font-mono text-[var(--color-foreground)] min-w-[3rem] text-right">
+            <span className="text-sm font-mono text-[var(--color-foreground)] text-right">
               {localValue}
             </span>
           </div>

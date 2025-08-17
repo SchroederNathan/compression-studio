@@ -235,7 +235,7 @@ export default function CompressionSettings({ type, onChange }: Props) {
                   }}
                 />
               </label>
-              <label className="gap-2 text-sm text-[var(--color-foreground)]">
+              <label className="gap-1 text-sm text-[var(--color-foreground)]">
                 <span>Max width</span>
                 <input
                   className="px-2 py-1 w-32 rounded-md border border-[var(--color-border)] bg-[var(--color-input)] text-[var(--color-foreground)]"
