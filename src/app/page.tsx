@@ -153,7 +153,7 @@ export default function Home() {
   }, [compressedBlob, selectedFile, mode, imageSettings]);
 
   return (
-    <main className="max-w-4xl mx-auto my-10 px-4 flex flex-col gap-4">
+    <main className="flex flex-col gap-4 container my-10 mx-auto px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-semibold text-[var(--color-foreground)]">
         Compression Studio
       </h1>
@@ -178,7 +178,7 @@ export default function Home() {
         </label>
       </div>
       <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] p-4 flex flex-col gap-3">
-        <FileUploader onFileSelected={onFileSelected} />
+        <FileUploader onFileSelected={onFileSelected} mode={mode} />
         {fileInfo && (
           <div className="text-sm text-[var(--color-muted-foreground)]">
             Selected: {fileInfo}
