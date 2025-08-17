@@ -35,12 +35,62 @@ export const Compare = ({
 }: CompareProps) => {
   const [sliderXPercent, setSliderXPercent] = useState(initialSliderPercentage);
   const [isDragging, setIsDragging] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
 
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const [isMouseOver, setIsMouseOver] = useState(false);
 
   const autoplayRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Helper function to detect aspect ratio from image
+  const detectImageAspectRatio = useCallback((imageSrc: string) => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = img.naturalWidth / img.naturalHeight;
+      setAspectRatio(ratio);
+    };
+    img.src = imageSrc;
+  }, []);
+
+  // Helper function to detect aspect ratio from video element
+  const detectVideoAspectRatio = useCallback((videoElement: HTMLVideoElement) => {
+    const handleLoadedMetadata = () => {
+      if (videoElement.videoWidth && videoElement.videoHeight) {
+        const ratio = videoElement.videoWidth / videoElement.videoHeight;
+        setAspectRatio(ratio);
+      }
+    };
+
+    if (videoElement.readyState >= 1) {
+      // Metadata already loaded
+      handleLoadedMetadata();
+    } else {
+      videoElement.addEventListener('loadedmetadata', handleLoadedMetadata, { once: true });
+    }
+  }, []);
+
+  // Effect to detect aspect ratio when images change
+  useEffect(() => {
+    if (firstImage) {
+      detectImageAspectRatio(firstImage);
+    } else if (secondImage) {
+      detectImageAspectRatio(secondImage);
+    }
+  }, [firstImage, secondImage, detectImageAspectRatio]);
+
+  // Effect to detect aspect ratio from video nodes
+  useEffect(() => {
+    if (firstNode || secondNode) {
+      // Look for video elements in the DOM after a short delay to ensure they're rendered
+      setTimeout(() => {
+        const videos = sliderRef.current?.querySelectorAll('video');
+        if (videos && videos.length > 0) {
+          detectVideoAspectRatio(videos[0]);
+        }
+      }, 100);
+    }
+  }, [firstNode, secondNode, detectVideoAspectRatio]);
 
   const startAutoplay = useCallback(() => {
     if (!autoplay) return;
@@ -154,10 +204,11 @@ export const Compare = ({
   return (
     <div
       ref={sliderRef}
-      className={cn("w-[400px] h-[400px] overflow-hidden", className)}
+      className={cn("w-full overflow-hidden", aspectRatio ? "" : "h-full min-h-[200px]", className)}
       style={{
         position: "relative",
         cursor: slideMode === "drag" ? "grab" : "col-resize",
+        aspectRatio: aspectRatio ? `${aspectRatio}` : undefined,
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={mouseLeaveHandler}

@@ -243,15 +243,15 @@ export default function Home() {
           {originalUrl && compressedUrl ? (
             // Show comparison when both files are ready
             <div className="flex flex-col gap-4">
-              <div className="flex w-full justify-center">
-                <div className="mx-auto w-full max-w-4xl h-[60vh]">
+              <div className="w-full">
+                <div className="w-full max-w-none">
                   {mode === "image" ? (
                     <Compare
                       firstImage={originalUrl}
                       secondImage={compressedUrl}
                       firstImageClassName="object-cover object-center w-full h-full"
                       secondImageClassname="object-cover object-center w-full h-full"
-                      className="h-full w-full rounded-lg"
+                      className="w-full rounded-lg"
                       slideMode="drag"
                       autoplay={false}
                     />
@@ -279,7 +279,7 @@ export default function Home() {
                       }
                       firstImageClassName="object-cover object-center w-full h-full"
                       secondImageClassname="object-cover object-center w-full h-full"
-                      className="h-full w-full rounded-lg"
+                      className="w-full rounded-lg"
                       slideMode="drag"
                       autoplay={false}
                     />
