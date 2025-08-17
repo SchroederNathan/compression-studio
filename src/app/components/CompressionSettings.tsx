@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Dropdown, { DropdownItem } from './dropdown';
 
 export type ImageCompressionSettings = {
   format: 'jpeg' | 'png' | 'webp' | 'avif';
@@ -43,44 +44,50 @@ export default function CompressionSettings({ type, onChange }: Props) {
     onChange(next);
   }
 
+  const imageQualityItems: DropdownItem[] = [
+    { label: 'Low (smaller file)', onClick: () => { setImageLevel('low'); applyImageLevel('low'); }, type: 'button' },
+    { label: 'Medium', onClick: () => { setImageLevel('medium'); applyImageLevel('medium'); }, type: 'button' },
+    { label: 'High (better quality)', onClick: () => { setImageLevel('high'); applyImageLevel('high'); }, type: 'button' },
+    { label: 'Custom', onClick: () => setImageLevel('custom'), type: 'button' }
+  ];
+
+  const videoQualityItems: DropdownItem[] = [
+    { label: 'Low (smaller file)', onClick: () => { setVideoLevel('low'); applyVideoLevel('low'); }, type: 'button' },
+    { label: 'Medium', onClick: () => { setVideoLevel('medium'); applyVideoLevel('medium'); }, type: 'button' },
+    { label: 'High (better quality)', onClick: () => { setVideoLevel('high'); applyVideoLevel('high'); }, type: 'button' },
+    { label: 'Custom', onClick: () => setVideoLevel('custom'), type: 'button' }
+  ];
+
+  const getQualityLabel = (level: string) => {
+    switch (level) {
+      case 'low': return 'Low (smaller file)';
+      case 'medium': return 'Medium';
+      case 'high': return 'High (better quality)';
+      case 'custom': return 'Custom';
+      default: return 'Medium';
+    }
+  };
+
   return (
     <div className="flex gap-3 flex-wrap">
       {type === 'image' ? (
-        <label className="gap-2 text-sm text-[var(--color-foreground)]">
-          <span>Quality</span>
-          <select
-            className="px-2 py-1 rounded-md border border-[var(--color-border)] bg-[var(--color-input)] text-[var(--color-foreground)]"
-            value={imageLevel}
-            onChange={(e) => {
-              const level = e.target.value as typeof imageLevel;
-              setImageLevel(level);
-              if (level !== 'custom') applyImageLevel(level);
-            }}
-          >
-            <option value="low">Low (smaller file)</option>
-            <option value="medium">Medium</option>
-            <option value="high">High (better quality)</option>
-            <option value="custom">Custom</option>
-          </select>
-        </label>
+        <div className="flex flex-col gap-2">
+          <span className="text-sm text-[var(--color-foreground)]">Quality</span>
+          <Dropdown
+            buttonText={getQualityLabel(imageLevel)}
+            items={imageQualityItems}
+            position="left"
+          />
+        </div>
       ) : (
-        <label className="gap-2 text-sm text-[var(--color-foreground)]">
-          <span>Quality</span>
-          <select
-            className="px-2 py-1 rounded-md border border-[var(--color-border)] bg-[var(--color-input)] text-[var(--color-foreground)]"
-            value={videoLevel}
-            onChange={(e) => {
-              const level = e.target.value as typeof videoLevel;
-              setVideoLevel(level);
-              if (level !== 'custom') applyVideoLevel(level);
-            }}
-          >
-            <option value="low">Low (smaller file)</option>
-            <option value="medium">Medium</option>
-            <option value="high">High (better quality)</option>
-            <option value="custom">Custom</option>
-          </select>
-        </label>
+        <div className="flex flex-col gap-2">
+          <span className="text-sm text-[var(--color-foreground)]">Quality</span>
+          <Dropdown
+            buttonText={getQualityLabel(videoLevel)}
+            items={videoQualityItems}
+            position="left"
+          />
+        </div>
       )}
 
       <button
@@ -95,24 +102,19 @@ export default function CompressionSettings({ type, onChange }: Props) {
         <>
           {showAdvanced && (
             <>
-              <label className="gap-2 text-sm text-[var(--color-foreground)]">
-                <span>Format</span>
-                <select
-                  className="px-2 py-1 rounded-md border border-[var(--color-border)] bg-[var(--color-input)] text-[var(--color-foreground)]"
-                  value={image.format}
-                  onChange={(e) => {
-                    const next = { ...image, format: e.target.value as ImageCompressionSettings['format'] };
-                    setImage(next);
-                    onChange(next);
-                    setImageLevel('custom');
-                  }}
-                >
-                  <option value="jpeg">JPEG</option>
-                  <option value="png">PNG</option>
-                  <option value="webp">WEBP</option>
-                  <option value="avif">AVIF</option>
-                </select>
-              </label>
+              <div className="flex flex-col gap-2">
+                <span className="text-sm text-[var(--color-foreground)]">Format</span>
+                <Dropdown
+                  buttonText={image.format.toUpperCase()}
+                  items={[
+                    { label: 'JPEG', onClick: () => { const next = { ...image, format: 'jpeg' as const }; setImage(next); onChange(next); setImageLevel('custom'); }, type: 'button' },
+                    { label: 'PNG', onClick: () => { const next = { ...image, format: 'png' as const }; setImage(next); onChange(next); setImageLevel('custom'); }, type: 'button' },
+                    { label: 'WEBP', onClick: () => { const next = { ...image, format: 'webp' as const }; setImage(next); onChange(next); setImageLevel('custom'); }, type: 'button' },
+                    { label: 'AVIF', onClick: () => { const next = { ...image, format: 'avif' as const }; setImage(next); onChange(next); setImageLevel('custom'); }, type: 'button' }
+                  ]}
+                  position="left"
+                />
+              </div>
               <label className="gap-2 text-sm text-[var(--color-foreground)]">
                 <span>Quality (1-100)</span>
                 <input
