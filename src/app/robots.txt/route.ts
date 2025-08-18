@@ -1,14 +1,16 @@
-import { MetadataRoute } from 'next'
- 
-export default function robots(): MetadataRoute.Robots {
+export function GET() {
   const baseUrl = 'https://compression-studio.com'
   
-  return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/api/', '/temp/'],
+  const robotsTxt = `User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /temp/
+
+Sitemap: ${baseUrl}/sitemap.xml`
+
+  return new Response(robotsTxt, {
+    headers: {
+      'Content-Type': 'text/plain',
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
-  }
+  })
 }

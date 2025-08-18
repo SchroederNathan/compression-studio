@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-export async function POST(_request: NextRequest) {
+export async function POST() {
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream<Uint8Array>({

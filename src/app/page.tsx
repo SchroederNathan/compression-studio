@@ -2,7 +2,7 @@
 
 import { ArrowLeftIcon } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Dropdown from "./components/dropdown";
 import FileTypeTabs from "./components/file-type-tabs";
 import FileUploader from "./components/FileUploader";
@@ -67,12 +67,12 @@ export default function Home() {
     };
   }, [selectedFile]);
 
-  const fileInfo = useMemo(() => {
-    if (!selectedFile) return null;
-    return `${selectedFile.name} (${fileSizeToHumanReadable(
-      selectedFile.size
-    )})`;
-  }, [selectedFile]);
+  // const fileInfo = useMemo(() => {
+  //   if (!selectedFile) return null;
+  //   return `${selectedFile.name} (${fileSizeToHumanReadable(
+  //     selectedFile.size
+  //   )})`;
+  // }, [selectedFile]);
 
   const onFileSelected = useCallback((file: File) => {
     setSelectedFile(file);
@@ -202,72 +202,72 @@ export default function Home() {
   }, [compressedBlob, selectedFile, mode, imageSettings]);
 
   // Dynamic structured data based on current mode
-  const dynamicStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name:
-      mode === "image"
-        ? "Image Compression Tool - Compression Studio"
-        : "Video Compression Tool - Compression Studio",
-    description:
-      mode === "image"
-        ? "Free online image compression tool. Compress JPEG, PNG, WebP, AVIF images while maintaining quality. Reduce file sizes instantly."
-        : "Free online video compression tool. Compress MP4 videos with adjustable quality and bitrate settings. Reduce video file sizes efficiently.",
-    url: `https://compression-studio.com${
-      mode === "image" ? "/image-compression" : "/video-compression"
-    }`,
-    mainEntity: {
-      "@type": "SoftwareApplication",
-      name: `${mode === "image" ? "Image" : "Video"} Compression Tool`,
-      applicationCategory: "MultimediaApplication",
-      operatingSystem: "Any",
-      description:
-        mode === "image"
-          ? "Professional image compression with support for JPEG, PNG, WebP, and AVIF formats"
-          : "Professional video compression with quality control and bitrate optimization",
-      featureList:
-        mode === "image"
-          ? [
-              "JPEG compression",
-              "PNG compression",
-              "WebP compression",
-              "AVIF compression",
-              "Quality control",
-              "Size optimization",
-            ]
-          : [
-              "MP4 compression",
-              "Video bitrate control",
-              "Audio bitrate control",
-              "Resolution adjustment",
-              "Quality optimization",
-            ],
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-      },
-    },
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://compression-studio.com",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: `${mode === "image" ? "Image" : "Video"} Compression`,
-          item: `https://compression-studio.com${
-            mode === "image" ? "/image-compression" : "/video-compression"
-          }`,
-        },
-      ],
-    },
-  };
+  // const dynamicStructuredData = {
+  //   "@context": "https://schema.org",
+  //   "@type": "WebPage",
+  //   name:
+  //     mode === "image"
+  //       ? "Image Compression Tool - Compression Studio"
+  //       : "Video Compression Tool - Compression Studio",
+  //   description:
+  //     mode === "image"
+  //       ? "Free online image compression tool. Compress JPEG, PNG, WebP, AVIF images while maintaining quality. Reduce file sizes instantly."
+  //       : "Free online video compression tool. Compress MP4 videos with adjustable quality and bitrate settings. Reduce video file sizes efficiently.",
+  //   url: `https://compression-studio.com${
+  //     mode === "image" ? "/image-compression" : "/video-compression"
+  //   }`,
+  //   mainEntity: {
+  //     "@type": "SoftwareApplication",
+  //     name: `${mode === "image" ? "Image" : "Video"} Compression Tool`,
+  //     applicationCategory: "MultimediaApplication",
+  //     operatingSystem: "Any",
+  //     description:
+  //       mode === "image"
+  //         ? "Professional image compression with support for JPEG, PNG, WebP, and AVIF formats"
+  //         : "Professional video compression with quality control and bitrate optimization",
+  //     featureList:
+  //       mode === "image"
+  //         ? [
+  //             "JPEG compression",
+  //             "PNG compression",
+  //             "WebP compression",
+  //             "AVIF compression",
+  //             "Quality control",
+  //             "Size optimization",
+  //           ]
+  //         : [
+  //             "MP4 compression",
+  //             "Video bitrate control",
+  //             "Audio bitrate control",
+  //             "Resolution adjustment",
+  //             "Quality optimization",
+  //           ],
+  //     offers: {
+  //       "@type": "Offer",
+  //       price: "0",
+  //       priceCurrency: "USD",
+  //     },
+  //   },
+  //   breadcrumb: {
+  //     "@type": "BreadcrumbList",
+  //     itemListElement: [
+  //       {
+  //         "@type": "ListItem",
+  //         position: 1,
+  //         name: "Home",
+  //         item: "https://compression-studio.com",
+  //       },
+  //       {
+  //         "@type": "ListItem",
+  //         position: 2,
+  //         name: `${mode === "image" ? "Image" : "Video"} Compression`,
+  //         item: `https://compression-studio.com${
+  //           mode === "image" ? "/image-compression" : "/video-compression"
+  //         }`,
+  //       },
+  //     ],
+  //   },
+  // };
 
   return (
     <>

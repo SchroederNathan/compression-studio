@@ -1,6 +1,7 @@
 "use client";
 import { EllipsisVertical } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "../../lib/utils";
 import { SparklesCore } from "./sparkles";
@@ -39,13 +40,13 @@ export const Compare = ({
 
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  const [isMouseOver, setIsMouseOver] = useState(false);
+  const [, setIsMouseOver] = useState(false);
 
   const autoplayRef = useRef<NodeJS.Timeout | null>(null);
 
   // Helper function to detect aspect ratio from image
   const detectImageAspectRatio = useCallback((imageSrc: string) => {
-    const img = new Image();
+    const img = new window.Image();
     img.onload = () => {
       const ratio = img.naturalWidth / img.naturalHeight;
       setAspectRatio(ratio);
@@ -138,7 +139,7 @@ export const Compare = ({
   }
 
   const handleStart = useCallback(
-    (clientX: number) => {
+    () => {
       if (slideMode === "drag") {
         setIsDragging(true);
       }
@@ -168,7 +169,7 @@ export const Compare = ({
   );
 
   const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => handleStart(e.clientX),
+    () => handleStart(),
     [handleStart]
   );
   const handleMouseUp = useCallback(() => handleEnd(), [handleEnd]);
@@ -178,9 +179,9 @@ export const Compare = ({
   );
 
   const handleTouchStart = useCallback(
-    (e: React.TouchEvent) => {
+    () => {
       if (!autoplay) {
-        handleStart(e.touches[0].clientX);
+        handleStart();
       }
     },
     [handleStart, autoplay]
@@ -266,14 +267,16 @@ export const Compare = ({
                   {firstNode}
                 </div>
               ) : (
-                <img
+                <Image
                   alt="first image"
                   src={firstImage}
+                  fill
                   className={cn(
-                    "absolute inset-0 z-20 rounded-lg shrink-0 w-full h-full select-none",
+                    "object-cover rounded-lg",
                     firstImageClassName
                   )}
                   draggable={false}
+                  sizes="50vw"
                 />
               )}
             </motion.div>
@@ -295,14 +298,16 @@ export const Compare = ({
                 {secondNode}
               </div>
             ) : (
-              <img
+              <Image
                 className={cn(
-                  "absolute top-0 left-0 z-[19] rounded-lg w-full h-full select-none",
+                  "object-cover rounded-lg",
                   secondImageClassname
                 )}
                 alt="second image"
                 src={secondImage}
+                fill
                 draggable={false}
+                sizes="50vw"
               />
             )}
           </motion.div>

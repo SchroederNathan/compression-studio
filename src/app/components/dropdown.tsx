@@ -23,10 +23,7 @@ export interface DropdownProps {
 export default function Dropdown({
   buttonText,
   items = [],
-  children,
-  buttonClassName,
   menuClassName,
-  itemClassName,
   position = 'right'
 }: DropdownProps) {
   const defaultButtonClassName = "inline-flex w-full justify-center gap-x-1.5 rounded-md bg-[var(--color-card)] px-3 py-2 text-sm font-semibold text-[var(--color-foreground)] ring-1 ring-inset ring-[var(--color-border)] hover:bg-[var(--color-muted)] transition-colors duration-200";

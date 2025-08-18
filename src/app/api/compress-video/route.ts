@@ -5,7 +5,7 @@ import ffprobeStatic from 'ffprobe-static';
 import { mkdirSync, writeFileSync, readFileSync, statSync, unlinkSync, existsSync } from 'fs';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
-import { Readable } from 'stream';
+
 
 export const runtime = 'nodejs';
 
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     const targetBitrate = String(formData.get('videoBitrate') || '1000k');
-    const targetAudioBitrate = String(formData.get('audioBitrate') || '128k');
+    // const targetAudioBitrate = String(formData.get('audioBitrate') || '128k');
     const targetWidth = Number(formData.get('maxWidth'));
     const targetHeight = Number(formData.get('maxHeight'));
 

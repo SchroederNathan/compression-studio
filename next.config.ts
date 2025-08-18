@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
 
   // PWA and SEO optimizations
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true, // Disabled due to critters module dependency issue
   },
 };
 
